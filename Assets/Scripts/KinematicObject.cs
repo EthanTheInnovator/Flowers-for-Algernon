@@ -7,15 +7,6 @@ using UnityEngine;
 /// </summary>
 public class KinematicObject : MonoBehaviour
 {
-    /// <summary>
-    /// The minimum normal (dot product) considered suitable for the entity sit on.
-    /// </summary>
-    public float minGroundNormalY = .65f;
-    
-    /// <summary>
-    /// A custom gravity coefficient applied to this entity.
-    /// </summary>
-    public float gravityModifier = 1f;
     
     /// <summary>
     /// The current velocity of the entity.
@@ -23,7 +14,6 @@ public class KinematicObject : MonoBehaviour
     public Vector2 velocity;
     
     protected Vector2 targetVelocity;
-    protected Vector2 groundNormal;
     protected Rigidbody2D body;
     protected ContactFilter2D contactFilter;
     protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
@@ -105,17 +95,7 @@ public class KinematicObject : MonoBehaviour
 //      IsGrounded = false;
         
         var deltaPosition = velocity * Time.deltaTime;
-        
-        var moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
-        
-        var move = moveAlongGround * deltaPosition.x;
-        
-        PerformMovement(move, false);
-        
-        move = Vector2.up * deltaPosition.y;
-        
-        PerformMovement(move, true);
-        
+        PerformMovement(deltaPosition, true);
     }
     
     void PerformMovement(Vector2 move, bool yMovement)
