@@ -8,6 +8,8 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] Vector2Int mazeSize;
 
     private void Start() {
+        // GenerateMazeInstant(mazeSize);
+        // GenerateMaze(mazeSize);
         StartCoroutine(GenerateMaze(mazeSize));
     }
 
@@ -20,110 +22,80 @@ public class MazeGenerator : MonoBehaviour
             List<MazeCell> mazeRow = new List<MazeCell>();
             for (int x = 0; x < size.x; x++)
             {
-                Vector3 cellPosition = new Vector3(x - (size.x / 2f), -(y - (size.y / 2f)));
+                Vector3 cellPosition = new Vector3(x - (size.x / 2f), y - (size.y / 2f));
                 MazeCell newCell = Instantiate(cellPrefab, cellPosition, Quaternion.identity, transform);
                 mazeRow.Add(newCell);
                 unvisitedCoordinates.Add(new Vector2Int(x, y));
-                // yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.01f);
             }
             cellMatrix.Add(mazeRow);
         }
 
-        bool isMazeComplete = false;
-        List<Vector2Int> spaceStack = new List<Vector2Int>();
+        List<Vector2Int> currentPath = new List<Vector2Int>();
 
-        var random = new System.Random();
-        while (!isMazeComplete) {
-            Vector2Int coordinate;
-            MazeCell currentCell;
-            if (spaceStack.Count > 0) {
-                coordinate = spaceStack[0];
-                spaceStack.RemoveAt(0);
-            } else if (unvisitedCoordinates.Count > 0) {
-                int randomIndex = random.Next(0, unvisitedCoordinates.Count - 1);
-                coordinate = unvisitedCoordinates[randomIndex];
-                unvisitedCoordinates.RemoveAt(randomIndex);
-                spaceStack.Insert(0, coordinate);
-                // cellMatrix[coordinate.x][coordinate.y].hideAllWalls();
-            } else {
-                isMazeComplete = true;
-                break;
-            }
-            currentCell = cellMatrix[coordinate.x][coordinate.y];
+        int randomStartIndex = Random.Range(0, unvisitedCoordinates.Count);
+        Vector2Int startCoordinate = unvisitedCoordinates[randomStartIndex];
+        currentPath.Add(startCoordinate);
+
+        while (unvisitedCoordinates.Count > 0) {
+            Vector2Int coordinate = currentPath[currentPath.Count - 1];
+            MazeCell currentCell = cellMatrix[coordinate.y][coordinate.x];
             
-            // Loop through random neighbor cells
-            bool hitDeadEnd = false;
-            while (!hitDeadEnd) {
-                // Keep a list of all possible directions we haven't tried yet
-                List<Direction> possibleNeighborDirections = new List<Direction>{Direction.Left, Direction.Right, Direction.Up, Direction.Down};
+            // Keep a list of all possible directions we haven't tried yet
+            List<Direction> possibleNeighborDirections = new List<Direction>{Direction.Left, Direction.Right, Direction.Up, Direction.Down};
+            
+            bool foundAvailableNeighbor = false;
+            // While we have a direction to try, pick one and check its space.
+            while (possibleNeighborDirections.Count > 0) {
+                int randomIndex = Random.Range(0, possibleNeighborDirections.Count);
+                Direction exitingDirection = possibleNeighborDirections[randomIndex];
+                Direction enteringDirection = Direction.Up;
+                possibleNeighborDirections.RemoveAt(randomIndex);
                 
-                // While we have a direction to try, pick one and check its space.
-                while (possibleNeighborDirections.Count > 0) {
-                    int randomIndex = random.Next(0, possibleNeighborDirections.Count - 1);
-                    Direction exitingDirection = possibleNeighborDirections[randomIndex];
-                    Direction enteringDirection;
-                    possibleNeighborDirections.RemoveAt(randomIndex);
-                    
-                    Vector2Int newCoordinate = coordinate;
-                    switch (exitingDirection)
-                    {
-                        case Direction.Left:
-                            newCoordinate.x--;
-                            enteringDirection = Direction.Right;
-                            break;
-                        case Direction.Right:
-                            newCoordinate.x++;
-                            enteringDirection = Direction.Left;
-                            break;
-                        case Direction.Up:
-                            newCoordinate.y++;
-                            enteringDirection = Direction.Down;
-                            break;
-                        case Direction.Down:
-                            newCoordinate.y--;
-                            enteringDirection = Direction.Up;
-                            break;
-                        default:
-                            enteringDirection = Direction.Up;
-                            break;
-                    }
-                    if (unvisitedCoordinates.Contains(newCoordinate)) {
-                        // If the space is unvisited, we have a hit!
-                        unvisitedCoordinates.Remove(newCoordinate);
-                        // let randomNum = random.Next(1, 10);
-                        // if (randomNum > 3) {
-                            // 70% chance of marking as unblocked.
-                            // Continue down this path.
-                            spaceStack.Insert(0, newCoordinate);
-                            disableWall(currentCell, exitingDirection);
-                            disableWall(cellMatrix[newCoordinate.x][newCoordinate.y], enteringDirection);
-
-                            // unblockedCoordinates.insert(neighborCoordinate);
-                            coordinate = newCoordinate;
-                            break;
-                        // } else {
-                        //     // 30% chance of marking as blocked.
-                        //     // Don't break out of the loop so that we will check other neighboring spaced.
-                        //     maze.replaceSpace(at: neighborCoordinate, with: .blocked)
-                        // }
-                    }
+                Vector2Int newCoordinate = coordinate;
+                switch (exitingDirection)
+                {
+                    case Direction.Left:
+                        newCoordinate.x--;
+                        enteringDirection = Direction.Right;
+                        break;
+                    case Direction.Right:
+                        newCoordinate.x++;
+                        enteringDirection = Direction.Left;
+                        break;
+                    case Direction.Up:
+                        newCoordinate.y++;
+                        enteringDirection = Direction.Down;
+                        break;
+                    case Direction.Down:
+                        newCoordinate.y--;
+                        enteringDirection = Direction.Up;
+                        break;
                 }
-                hitDeadEnd = true;
-                yield return new WaitForSeconds(0.1f);
+                if (unvisitedCoordinates.Contains(newCoordinate) && !currentPath.Contains(newCoordinate)) {
+                    // If the space is unvisited, we have a hit!
+
+                    disableWall(currentCell, exitingDirection);
+                    disableWall(cellMatrix[newCoordinate.y][newCoordinate.x], enteringDirection);
+                    currentPath.Add(newCoordinate);
+
+                    foundAvailableNeighbor = true;
+                    break;
+                }
             }
+            if (!foundAvailableNeighbor) {
+                unvisitedCoordinates.Remove(coordinate);
+                currentPath.RemoveAt(currentPath.Count - 1);
+            }
+            yield return new WaitForSeconds(0.01f);
         }
         
         // // Generate a random start and end point
-        // guard let startPoint = unblockedCoordinates.randomElement() else {
-        //     return maze
-        // }
-        // unblockedCoordinates.remove(startPoint)
-        // maze.startPoint = startPoint
+        int randomEntryPoint = Random.Range(0, mazeSize.x);
+        cellMatrix[0][randomEntryPoint].hideBottomWall();
         
-        // guard let endPoint = unblockedCoordinates.randomElement() else {
-        //     return maze
-        // }
-        // maze.endPoint = endPoint
+        int randomExitPoint = Random.Range(0, mazeSize.x);
+        cellMatrix[mazeSize.y - 1][randomExitPoint].hideTopWall();
         
         yield return null;
     }

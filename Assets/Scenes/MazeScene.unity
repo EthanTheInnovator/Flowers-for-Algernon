@@ -203,7 +203,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6.0570526
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 5988420737518021964, guid: 13165b62cdfbe419c805c633b288a4cf, type: 3}
-  mazeSize: {x: 10, y: 10}
+  mazeSize: {x: 20, y: 20}
 --- !u!4 &2111260349
 Transform:
   m_ObjectHideFlags: 0
