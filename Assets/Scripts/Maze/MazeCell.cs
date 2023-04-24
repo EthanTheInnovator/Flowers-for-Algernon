@@ -8,6 +8,9 @@ public class MazeCell : MonoBehaviour
     [SerializeField] GameObject rightWall;
     [SerializeField] GameObject topWall;
     [SerializeField] GameObject bottomWall;
+    [SerializeField] Collider2D goalTrigger;
+
+    bool isExitNode = false;
 
     public void hideAllWalls() {
         hideLeftWall();
@@ -30,5 +33,15 @@ public class MazeCell : MonoBehaviour
 
     public void hideBottomWall() {
         Destroy(bottomWall);
+    }
+
+    public void setIsExitNode(bool newValue) {
+        isExitNode = newValue;
+    }
+
+    void OnTriggerEnter2D(Collider2D hit) {
+        if (hit.gameObject.name == "Player" && isExitNode) {
+            Debug.Log("Win!");
+        }
     }
 }
