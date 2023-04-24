@@ -6,14 +6,14 @@ public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] MazeCell cellPrefab;
     [SerializeField] Vector2Int mazeSize;
+    [SerializeField] PlayerController player;
 
     private void Start() {
         // GenerateMazeInstant(mazeSize);
-        // GenerateMaze(mazeSize);
-        StartCoroutine(GenerateMaze(mazeSize));
+        GenerateMaze(mazeSize);
     }
 
-    IEnumerator GenerateMaze(Vector2Int size) {
+    void GenerateMaze(Vector2Int size) {
 
         List<List<MazeCell>> cellMatrix = new List<List<MazeCell>>();
         List<Vector2Int> unvisitedCoordinates = new List<Vector2Int>();
@@ -26,7 +26,6 @@ public class MazeGenerator : MonoBehaviour
                 MazeCell newCell = Instantiate(cellPrefab, cellPosition, Quaternion.identity, transform);
                 mazeRow.Add(newCell);
                 unvisitedCoordinates.Add(new Vector2Int(x, y));
-                yield return new WaitForSeconds(0.01f);
             }
             cellMatrix.Add(mazeRow);
         }
@@ -87,17 +86,15 @@ public class MazeGenerator : MonoBehaviour
                 unvisitedCoordinates.Remove(coordinate);
                 currentPath.RemoveAt(currentPath.Count - 1);
             }
-            yield return new WaitForSeconds(0.01f);
         }
         
         // // Generate a random start and end point
         int randomEntryPoint = Random.Range(0, mazeSize.x);
-        cellMatrix[0][randomEntryPoint].hideBottomWall();
+        player.transform.position = cellMatrix[0][randomEntryPoint].transform.position;
         
         int randomExitPoint = Random.Range(0, mazeSize.x);
         cellMatrix[mazeSize.y - 1][randomExitPoint].hideTopWall();
-        
-        yield return null;
+        cellMatrix[mazeSize.y - 1][randomExitPoint].setIsExitNode(true);
     }
 
     private void disableWall(MazeCell cell, Direction direction) {
