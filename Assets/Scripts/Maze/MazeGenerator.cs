@@ -5,24 +5,22 @@ using UnityEngine;
 public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] MazeCell cellPrefab;
-    [SerializeField] Vector2Int mazeSize;
     [SerializeField] PlayerController player;
 
-    private void Start() {
-        // GenerateMazeInstant(mazeSize);
-        GenerateMaze(mazeSize);
-    }
+    public void GenerateMaze(Vector2Int mazeSize, int randomSeed) {
 
-    void GenerateMaze(Vector2Int size) {
+        if (randomSeed != -1) {
+            Random.InitState(randomSeed);
+        }
 
         List<List<MazeCell>> cellMatrix = new List<List<MazeCell>>();
         List<Vector2Int> unvisitedCoordinates = new List<Vector2Int>();
 
-        for (int y = 0; y < size.y; y++) {
+        for (int y = 0; y < mazeSize.y; y++) {
             List<MazeCell> mazeRow = new List<MazeCell>();
-            for (int x = 0; x < size.x; x++)
+            for (int x = 0; x < mazeSize.x; x++)
             {
-                Vector3 cellPosition = new Vector3(x - (size.x / 2f), y - (size.y / 2f));
+                Vector3 cellPosition = new Vector3(x - (mazeSize.x / 2f), y - (mazeSize.y / 2f));
                 MazeCell newCell = Instantiate(cellPrefab, cellPosition, Quaternion.identity, transform);
                 mazeRow.Add(newCell);
                 unvisitedCoordinates.Add(new Vector2Int(x, y));
