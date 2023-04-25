@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] SightMask sightMaskPrefab;
     [SerializeField] PlayerController player;
     [SerializeField] Level level;
-    [SerializeField] MazeGenerator mazeGenerator;
+    [SerializeField] Maze maze;
     [SerializeField] GameObject blindnessOverlay;
     [SerializeField] int levelNumber;
     public static GameController Instance { get; private set; }
@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour
         }
         blindnessOverlay.SetActive(level.viewRadius > 0);
         player.maxSpeed = level.playerSpeed;
-        mazeGenerator.GenerateMaze(level.mazeSize, level.randomSeed);
+        maze.GenerateNewMaze(level.mazeSize, level.randomSeed);
 
         if (level.memoryLength <= 0) {
             SightMask sightMask = Instantiate(sightMaskPrefab, player.transform.position, Quaternion.identity, player.transform);

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Simulation;
 using static KinematicObject;
 
 /// <summary>
@@ -14,24 +13,19 @@ public class PlayerController : KinematicObject
     /// Max horizontal speed of the player.
     /// </summary>
     public float maxSpeed = 7;
-    
-    public Health health;
     public bool controlEnabled = true;
     
     Vector2 move;
     SpriteRenderer spriteRenderer;
 //  internal Animator animator;
     public Collider2D collider2d;
-    readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
     
     public Bounds Bounds => collider2d.bounds;
     
     void Awake()
     {
-        health = GetComponent<Health>();
         collider2d = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-//      animator = GetComponent<Animator>();
     }
     
     protected override void Update()

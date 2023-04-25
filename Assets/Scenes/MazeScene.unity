@@ -206,7 +206,7 @@ MonoBehaviour:
   sightMaskPrefab: {fileID: -1904090012157615345, guid: 95167aa047b1b42838f432c66e73bd8e, type: 3}
   player: {fileID: 1175303095}
   level: {fileID: 862441286}
-  mazeGenerator: {fileID: 2111260348}
+  maze: {fileID: 2111260350}
   blindnessOverlay: {fileID: 1136420554}
   levelNumber: 10
 --- !u!4 &998832888
@@ -240,7 +240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1136420555
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -532,6 +532,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0c18b18afa5f46a485704b5acc6e0fc, type: 3}
+--- !u!1 &1790700065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1790700066}
+  m_Layer: 0
+  m_Name: Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1790700066
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790700065}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2111260349}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2111260347
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,8 +573,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2111260349}
   - component: {fileID: 2111260348}
+  - component: {fileID: 2111260350}
   m_Layer: 0
-  m_Name: MazeGenerator
+  m_Name: Maze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -561,8 +593,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2153cf9b659e1405895b463aa9bfd763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 5988420737518021964, guid: 13165b62cdfbe419c805c633b288a4cf, type: 3}
-  player: {fileID: 1175303095}
 --- !u!4 &2111260349
 Transform:
   m_ObjectHideFlags: 0
@@ -574,7 +604,22 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1790700066}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2111260350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111260347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa005e4f59be143198d6311284a28402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 5988420737518021964, guid: 13165b62cdfbe419c805c633b288a4cf, type: 3}
+  player: {fileID: 1175303095}
