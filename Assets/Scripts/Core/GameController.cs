@@ -1,46 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// This class exposes the the game model in the inspector, and ticks the
 /// simulation.
 /// </summary> 
 public class GameController : MonoBehaviour
-{
+{   
+    public static bool isEndlessMode = false;
+    public static int levelNumber = 0;
+
+    public bool isPaused = false;
     [SerializeField] SightMask sightMaskPrefab;
     [SerializeField] PlayerController player;
     [SerializeField] Level level;
     [SerializeField] Maze maze;
     [SerializeField] GameObject blindnessOverlay;
-    [SerializeField] int levelNumber;
-    public static GameController Instance { get; private set; }
-    
-    //This model field is public and can be therefore be modified in the 
-    //inspector.
-    //The reference actually comes from the InstanceRegister, and is shared
-    //through the simulation and events. Unity will deserialize over this
-    //shared reference when the scene loads, allowing the model to be
-    //conveniently configured inside the inspector.
-    // public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
-    
-    void OnEnable()
-    {
-        Instance = this;
-    }
-    
-    void OnDisable()
-    {
-        if (Instance == this) Instance = null;
-    }
+    [SerializeField] Text levelText;
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject winMenu;
+    [SerializeField] GameObject failMenu;
+    [SerializeField] Timer timer;
+
+    private SaveDataManager saveDataManager = new SaveDataManager();
 
     void Start() {
-        if (levelNumber >= 0) {
+        Time.timeScale = 1;
+        if (!isEndlessMode) {
             level = LevelStore.loadLevel(levelNumber);
+        } else {
+            level = LevelStore.generateLevel();
+            level.levelNumber = levelNumber;
         }
+
+        levelText.text = "LEVEL " + (levelNumber + 1);
         blindnessOverlay.SetActive(level.viewRadius > 0);
         player.maxSpeed = level.playerSpeed;
         maze.GenerateNewMaze(level.mazeSize, level.randomSeed);
+        timer.timeRemaining = level.timeLimit;
 
         if (level.memoryLength <= 0) {
             SightMask sightMask = Instantiate(sightMaskPrefab, player.transform.position, Quaternion.identity, player.transform);
@@ -55,6 +54,50 @@ public class GameController : MonoBehaviour
             sightMask.transform.localScale = new Vector3(level.viewRadius, level.viewRadius);
             sightMask.setLiveSeconds(level.memoryLength);
             sightMask.beginDestructionCountdown();
+        }
+    }
+
+    public void togglePause() {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+    }
+
+    public void timerExpired() {
+        Time.timeScale = 0;
+        failMenu.SetActive(true);
+    }
+
+    public void onPass() {
+        if (levelNumber != -1) {
+            if (isEndlessMode) {
+                if (saveDataManager.getEndlessModeHighScore() < levelNumber) {
+                    saveDataManager.setEndlessModeHighScore(levelNumber);
+                }
+            } else {
+                saveDataManager.setLastCompletedLevel(levelNumber);
+            }
+        }
+        Time.timeScale = 0;
+        winMenu.SetActive(true);
+    }
+
+    public void onExitToMenu() {
+        SceneLoader.loadMainMenu();
+    }
+
+    public void onReplay() {
+        if (isEndlessMode) {
+            SceneLoader.loadEndlessMode(0);
+        } else {
+            SceneLoader.loadLevelScene(levelNumber);
+        }
+    }
+
+    public void continueToNextLevel() {
+        if (isEndlessMode) {
+            SceneLoader.loadEndlessMode(levelNumber + 1);
+        } else {
+            SceneLoader.loadLevelScene(levelNumber + 1);
         }
     }
 }

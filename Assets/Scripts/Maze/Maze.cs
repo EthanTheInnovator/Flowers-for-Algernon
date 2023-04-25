@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour
 {
+    [SerializeField] GameController gameController;
     [SerializeField] MazeCell cellPrefab;
     [SerializeField] PlayerController player;
     private GameObject container;
@@ -24,6 +25,7 @@ public class Maze : MonoBehaviour
                 MazeNode node = cellMatrix[y][x];
                 Vector3 cellPosition = new Vector3(x - (mazeSize.x / 2f), y - (mazeSize.y / 2f));
                 MazeCell newCell = Instantiate(cellPrefab, cellPosition, Quaternion.identity, container.transform);
+                newCell.gameController = this.gameController;
                 if (!node.hasTopWall) {
                     newCell.hideTopWall();
                 }

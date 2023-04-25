@@ -7,24 +7,21 @@ public class Timer : MonoBehaviour
 {
     public float timeRemaining = 60; // the initial time for the countdown
     public Text countdownText; // the UI Text object to display the countdown
-    public GameObject Pause;
-    public GameObject Pass;
-    public GameObject lose;
+    public bool isTimerPaused = false;
+    [SerializeField] GameController gameController;
     void Update()
     {
-        if ((!Pass.activeSelf)&&(!Pause.activeSelf)&&(!lose.activeSelf))
+        if (timeRemaining > 0)
         {
-            if (timeRemaining > 0)
-            {
-                timeRemaining -= Time.deltaTime; // reduce the remaining time by the time passed since last frame
-                UpdateCountdownText(); // update the UI text
-            }
-            else
-            {
-                // the countdown is over, do something here
-                lose.SetActive(true);
-            }
+            timeRemaining -= Time.deltaTime; // reduce the remaining time by the time passed since last frame
         }
+        else
+        {
+            timeRemaining = 0;
+            // the countdown is over, do something here
+            gameController.timerExpired();
+        }
+        UpdateCountdownText();
     }
 
     void UpdateCountdownText()

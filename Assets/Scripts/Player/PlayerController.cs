@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static KinematicObject;
 
 /// <summary>
 /// This is the main class used to implement control of the player.
 /// It is a superset of the AnimationController class, but is inlined to allow for any kind of customisation.
 /// </summary>
-public class PlayerController : KinematicObject
+public class PlayerController : MonoBehaviour
 {
     /// <summary>
     /// Max horizontal speed of the player.
@@ -17,6 +16,7 @@ public class PlayerController : KinematicObject
     
     Vector2 move;
     SpriteRenderer spriteRenderer;
+    new Rigidbody2D rigidbody;
 //  internal Animator animator;
     public Collider2D collider2d;
     
@@ -26,38 +26,34 @@ public class PlayerController : KinematicObject
     {
         collider2d = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rigidbody = GetComponent<Rigidbody2D>();
     }
     
-    protected override void Update()
+    void Update()
     {
         if (controlEnabled)
         {
             move.x = Input.GetAxis("Horizontal");
             move.y = Input.GetAxis("Vertical");
-        }
-        else
-        {
+
+            if (move.x > 0.01f) {
+                spriteRenderer.flipX = false;
+            }
+            else if (move.x < -0.01f) {
+                spriteRenderer.flipX = true;
+            }
+
+            if (move.y > 0.01f) {
+                spriteRenderer.flipY = false;
+            }
+            else if (move.y < -0.01f) {
+                spriteRenderer.flipY = true;
+            }
+
+            rigidbody.velocity = move * maxSpeed;
+        } else {
             move.x = 0;
             move.y = 0;
-        }
-        base.Update();
-    }
-    
-    protected override void ComputeVelocity()
-    {   
-        if (move.x > 0.01f)
-            spriteRenderer.flipX = false;
-        else if (move.x < -0.01f)
-            spriteRenderer.flipX = true;
-
-        if (move.y > 0.01f)
-            spriteRenderer.flipY = false;
-        else if (move.y < -0.01f)
-            spriteRenderer.flipY = true;
-        
-//      animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
-//      animator.SetFloat("velocityY", Mathf.Abs(velocity.y) / maxSpeed);
-        
-        targetVelocity = move * maxSpeed;
+        }   
     }
 }

@@ -21,4 +21,18 @@ public class LevelStore : MonoBehaviour
     public static Level loadLevel(int levelNumber) {
         return levels[levelNumber];
     }
+
+    public static Level generateLevel() {
+        bool shouldLimitViewRadius = Random.Range(0, 10) > 3;
+        bool shouldHaveMemory = Random.Range(0, 10) > 7;
+        return new Level(
+            Random.Range(30, 90),
+            Random.Range(1, 7),
+            shouldLimitViewRadius ? Random.Range(2, 7) : 0,
+            shouldHaveMemory ? Random.RandomRange(0, 2) : 0,
+            new Vector2Int(Random.Range(3, 15), Random.Range(3, 10)),
+            -1,
+            -1
+        );
+    }
 }
