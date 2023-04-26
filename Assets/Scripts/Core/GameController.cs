@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     public static int levelNumber = 0;
 
     public bool isPaused = false;
+    [SerializeField] bool overrideLevel;
     [SerializeField] SightMask sightMaskPrefab;
     [SerializeField] PlayerController player;
     [SerializeField] Level level;
@@ -28,13 +29,15 @@ public class GameController : MonoBehaviour
 
     void Start() {
         Time.timeScale = 1;
-        if (!isEndlessMode) {
-            level = LevelStore.loadLevel(levelNumber);
-        } else {
-            level = LevelStore.generateLevel();
-            level.levelNumber = levelNumber;
+        if (!overrideLevel) {
+            if (!isEndlessMode) {
+                level = LevelStore.loadLevel(levelNumber);
+            } else {
+                level = LevelStore.generateLevel();
+            }
         }
 
+        player.aggression = level.aggression;
         levelText.text = "LEVEL " + (levelNumber + 1);
         blindnessOverlay.SetActive(level.viewRadius > 0);
         player.maxSpeed = level.playerSpeed;
