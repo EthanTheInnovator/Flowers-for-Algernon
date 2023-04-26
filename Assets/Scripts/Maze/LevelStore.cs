@@ -27,6 +27,10 @@ public class LevelStore : MonoBehaviour
         new Level(300, 1, 2f, 0, new Vector2Int(25, 15), 9.5f, 14, 10), // Level 20
     };
 
+    public static int maxLevels() {
+        return levels.Count;
+    }
+
     public static Level loadLevel(int levelNumber) {
         if (levelNumber >= levels.Count) {
             return null;

@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
     private SaveDataManager saveDataManager = new SaveDataManager();
+    [SerializeField] Button endlessModeButton;
+    [SerializeField] Text highScoreText;
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (saveDataManager.getHasUnlockedEndlessMode()) {
+            highScoreText.text = "High Score: " + saveDataManager.getEndlessModeHighScore();
+        } else {
+            highScoreText.gameObject.SetActive(false);
+            endlessModeButton.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame

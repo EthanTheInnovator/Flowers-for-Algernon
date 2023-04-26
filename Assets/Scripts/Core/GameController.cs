@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Text levelText;
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject winMenu;
+    [SerializeField] GameObject gameCompleteMenu;
     [SerializeField] GameObject failMenu;
     [SerializeField] Timer timer;
 
@@ -38,10 +39,15 @@ public class GameController : MonoBehaviour
             }
         }
 
-        camera.orthographicSize = level.cameraSize;
+        if (isEndlessMode) {
+            levelText.text = "LEVEL " + (levelNumber + 1) + "\nHigh Score: " + saveDataManager.getEndlessModeHighScore();
+        } else {
+            levelText.text = "LEVEL " + (levelNumber + 1);
+        }
 
+        camera.orthographicSize = level.cameraSize;
         player.aggression = level.aggression;
-        levelText.text = "LEVEL " + (levelNumber + 1);
+        
         blindnessOverlay.SetActive(level.viewRadius > 0);
         player.maxSpeed = level.playerSpeed;
         maze.GenerateNewMaze(level.mazeSize, level.randomSeed);
@@ -76,15 +82,21 @@ public class GameController : MonoBehaviour
     public void onPass() {
         if (levelNumber != -1) {
             if (isEndlessMode) {
-                if (saveDataManager.getEndlessModeHighScore() < levelNumber) {
-                    saveDataManager.setEndlessModeHighScore(levelNumber);
+                if (saveDataManager.getEndlessModeHighScore() < levelNumber + 1) {
+                    saveDataManager.setEndlessModeHighScore(levelNumber + 1);
                 }
+                winMenu.SetActive(true);
+            } else if (levelNumber >= LevelStore.maxLevels() - 1) {
+                // The player beat the game!
+                saveDataManager.setHasCompletedGame(true);
+                saveDataManager.setHasUnlockedEndlessMode(true);
+                gameCompleteMenu.SetActive(true);
             } else {
                 saveDataManager.setLastCompletedLevel(levelNumber);
+                winMenu.SetActive(true);
             }
         }
         Time.timeScale = 0;
-        winMenu.SetActive(true);
     }
 
     public void onExitToMenu() {
