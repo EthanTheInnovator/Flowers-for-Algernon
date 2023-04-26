@@ -9,16 +9,19 @@ public class Level : MonoBehaviour
     [SerializeField] public float viewRadius;
     [SerializeField] public float memoryLength;
     [SerializeField] public Vector2Int mazeSize;
+    [SerializeField] public float cameraSize;
     [SerializeField] public int randomSeed;
     [SerializeField] public int aggression;
+    
 
-    public Level(int timeLimit, float playerSpeed, float viewRadius, float memoryLength, Vector2Int mazeSize, int randomSeed, int aggression)
+    public Level(int timeLimit, float playerSpeed, float viewRadius, float memoryLength, Vector2Int mazeSize, float cameraSize, int randomSeed, int aggression)
     {
         this.timeLimit = timeLimit;
         this.playerSpeed = playerSpeed;
         this.viewRadius = viewRadius;
         this.memoryLength = memoryLength;
         this.mazeSize = mazeSize;
+        this.cameraSize = cameraSize;
         this.randomSeed = randomSeed;
         this.aggression = aggression;
     }

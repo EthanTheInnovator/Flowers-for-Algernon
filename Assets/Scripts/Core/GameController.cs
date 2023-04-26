@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 
     public bool isPaused = false;
     [SerializeField] bool overrideLevel;
+    [SerializeField] Camera camera;
     [SerializeField] SightMask sightMaskPrefab;
     [SerializeField] PlayerController player;
     [SerializeField] Level level;
@@ -37,6 +38,8 @@ public class GameController : MonoBehaviour
             }
         }
 
+        camera.orthographicSize = level.cameraSize;
+
         player.aggression = level.aggression;
         levelText.text = "LEVEL " + (levelNumber + 1);
         blindnessOverlay.SetActive(level.viewRadius > 0);
@@ -50,7 +53,7 @@ public class GameController : MonoBehaviour
         }
     }
     
-    void Update()
+    void FixedUpdate()
     {
         if (level.viewRadius > 0) {
             SightMask sightMask = Instantiate(sightMaskPrefab, player.transform.position, Quaternion.identity);

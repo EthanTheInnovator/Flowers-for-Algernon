@@ -2,22 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// This is the main class used to implement control of the player.
-/// It is a superset of the AnimationController class, but is inlined to allow for any kind of customisation.
-/// </summary>
 public class PlayerController : MonoBehaviour
 {
-    /// <summary>
-    /// Max horizontal speed of the player.
-    /// </summary>
     public float maxSpeed = 7;
     public float aggression = 0;
     
     Vector2 move;
     SpriteRenderer spriteRenderer;
     new Rigidbody2D rigidbody;
-//  internal Animator animator;
     public Collider2D collider2d;
     
     public Bounds Bounds => collider2d.bounds;
@@ -34,7 +26,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         timeSinceLastAggression += Time.deltaTime;
-        if (timeSinceLastAggression > Mathf.Max(10 - aggression, 2)) {
+        if (timeSinceLastAggression > Mathf.Max(10 - aggression, aggression / 2f)) {
             bool shouldActOnAggression = Random.Range(0, 10) < aggression;
             if (shouldActOnAggression) {
                 timeSinceLastAggression = -Random.Range(0, (aggression / 2));
@@ -48,7 +40,6 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.color = Color.white;
             move.x = Input.GetAxis("Horizontal");
             move.y = Input.GetAxis("Vertical");
-            Debug.Log(move);
         }
 
         if (move.x > 0.01f) {

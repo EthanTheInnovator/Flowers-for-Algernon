@@ -14,7 +14,7 @@ public class Maze : MonoBehaviour
             Destroy(container);
         }
         GameObject newContainer = new GameObject();
-        container = Instantiate(newContainer, new Vector3(0, 0), Quaternion.identity, transform);
+        container = Instantiate(newContainer, new Vector3(0f, 0f), Quaternion.identity, transform);
 
         MazeGenerator generator = new MazeGenerator();
         List<List<MazeNode>> cellMatrix = generator.GenerateMaze(mazeSize, randomSeed);
@@ -23,7 +23,7 @@ public class Maze : MonoBehaviour
             for (int x = 0; x < mazeSize.x; x++)
             {
                 MazeNode node = cellMatrix[y][x];
-                Vector3 cellPosition = new Vector3(x - (mazeSize.x / 2f), y - (mazeSize.y / 2f));
+                Vector3 cellPosition = new Vector3(x - (mazeSize.x / 2f) + 0.5f, y - (mazeSize.y / 2f) + 0.5f);
                 MazeCell newCell = Instantiate(cellPrefab, cellPosition, Quaternion.identity, container.transform);
                 newCell.gameController = this.gameController;
                 if (!node.hasTopWall) {
