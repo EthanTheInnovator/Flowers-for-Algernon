@@ -34,3 +34,7 @@ Tests are located in the `/Assets/Tests/` sub-folder. We used the built-in NUnit
 ## Documentation
 We didn't write much documentation, but we aimed to make sure the code was readable. Documentation is important, but equally important is your code being self-documenting.
 
+### Additional Note
+Please reach out if you are unable to run the project. We used a `.gitignore`, and while it seems like the app was committed to GitHub, there could have been an issue. We are flexible and want you to play our game! 
+Also, be cautious of level 20. It's (purposefully) very difficult 😱
+
