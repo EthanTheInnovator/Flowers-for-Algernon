@@ -11,7 +11,7 @@ public class LevelStoreTests
         int numTotalLevels = 20;
         for (int i = 0; i < numTotalLevels; i++) {
             Level level = LevelStore.loadLevel(i);
-            Assert.That(level != null, "Level should have loaded!");
+            Assert.That(level.timeLimit > 0, "Level should have loaded!");
         }
     }
 }

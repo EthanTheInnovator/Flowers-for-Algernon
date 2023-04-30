@@ -38,7 +38,6 @@ public class MazeCell : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D hit) {
         if (hit.gameObject.name == "Player" && isExitNode) {
-            Debug.Log("Win!");
             gameController.onPass();
         }
     }

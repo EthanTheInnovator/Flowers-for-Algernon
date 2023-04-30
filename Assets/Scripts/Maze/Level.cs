@@ -12,7 +12,6 @@ public class Level : MonoBehaviour
     [SerializeField] public float cameraSize;
     [SerializeField] public int randomSeed;
     [SerializeField] public int aggression;
-    
 
     public Level(int timeLimit, float playerSpeed, float viewRadius, float memoryLength, Vector2Int mazeSize, float cameraSize, int randomSeed, int aggression)
     {
