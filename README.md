@@ -26,7 +26,7 @@ We used GitHub for source control and to share code between group members. We ha
 
 
 ## Code
-The code can be opened in the Unity editor if you'd like. Script files are written in C# and hosted in the ``/Assets/Scripts/` sub-folder. Some logic is handled in Unity Scene files or by the Unity engine itself.
+The code can be opened in the Unity editor if you'd like. Script files are written in C# and hosted in the `/Assets/Scripts/` sub-folder. Some logic is handled in Unity Scene files or by the Unity engine itself.
 
 ## Testing
 Tests are located in the `/Assets/Tests/` sub-folder. We used the built-in NUnit testing framework, and ensured that our script files were written in a way that we could test the classes without initializing the whole Unity scene (the benefit of using a good architecture!).
